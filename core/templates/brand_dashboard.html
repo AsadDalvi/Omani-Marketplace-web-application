@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ brand.name }} Dashboard - Omani Marketplace{% endblock %}
+
+{% block content %}
+<div class="brand-dashboard-container">
+    <h1 class="dashboard-title">{{ brand.name }} - Brand Dashboard</h1>
+    <p class="welcome-text">Welcome, {{ request.user.username }}!</p>
+
+    <a href="{% url 'add_product' %}" class="btn-primary">➕ Add New Product</a>
+
+    <h2 class="section-title">Your Products</h2>
+    {% if products %}
+    <ul class="dashboard-list">
+        {% for product in products %}
+            <li class="dashboard-item">
+                <strong>{{ product.name }}</strong> - {{ product.price }} OMR <br>
+                <a class="btn-primary small-btn" href="{% url 'edit_product' product.id %}">✏️ Edit</a>
+                <a class="btn-danger small-btn" href="{% url 'delete_product' product.id %}">🗑 Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p class="empty-text">No products yet.</p>
+    {% endif %}
+
+    <a href="{% url 'brand_orders' %}" class="btn-secondary">📦 View My Orders</a>
+
+    <h2 class="section-title">Contact Messages</h2>
+    {% if contact_messages %}
+    <ul class="dashboard-list">
+        {% for message in contact_messages %}
+            <li class="dashboard-item">
+                <strong>
+                    {% if message.user %}
+                        {{ message.user.username }}
+                    {% else %}
+                        Anonymous
+                    {% endif %}
+                </strong> - {{ message.created_at|date:"Y-m-d H:i" }}
+                <p>{{ message.message }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p class="empty-text">No contact messages yet.</p>
+    {% endif %}
+
+    <a href="/" class="btn-secondary">🏠 Back to Home</a>
+</div>
+{% endblock %}
